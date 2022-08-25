@@ -118,9 +118,9 @@ fun CalculatorContent() {
                 }
             }
 
-            AnimatedVisibility(
-                swipeState.targetValue != 2,
-                enter = slideInVertically { height -> height * 2 }) {
+//            AnimatedVisibility(
+//                swipeState.targetValue != 2,
+//                enter = slideInVertically { height -> height * 2 }) {
                 if (isLandscape) {
                     Column(modifier = Modifier
                         .fillMaxSize()
@@ -202,7 +202,7 @@ fun CalculatorContent() {
                                 .fillMaxWidth()
                                 .fillMaxHeight()
                                 .onSizeChanged {
-                                    btnFontSize = it.height / 40
+                                    btnFontSize = it.height / 42
                                 }
                         ) {
                             Spacer(modifier = Modifier.height(16.dp))
@@ -230,7 +230,7 @@ fun CalculatorContent() {
                         }
                     }
                 }
-            }
+//            }
         }
 //        }
     }

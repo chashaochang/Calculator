@@ -169,7 +169,7 @@ fun CalcInputView(swipeState: SwipeableState<Int>) {
                 Modifier
                     .width(20.dp)
                     .height(4.dp)
-                    .clip(RoundedCornerShape(4.dp))
+                    .clip(RoundedCornerShape(4.dp)), color = Color.Black
             )
         }
     }
