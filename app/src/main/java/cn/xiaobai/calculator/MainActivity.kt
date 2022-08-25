@@ -8,7 +8,7 @@ import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
@@ -71,9 +71,7 @@ fun CalculatorContent() {
     //是否横屏
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val scope = rememberCoroutineScope()
-
     val swipeState = rememberSwipeableState(0)
-
     val landscapeList = listOf(
         listOf("RAD", "√", "π", "7", "8", "9", "÷", "AC"),
         listOf("INV", "^", "!", "4", "5", "6", "×", "()"),
@@ -128,120 +126,121 @@ fun CalculatorContent() {
                         }
                         .background(color = MaterialTheme.colorScheme.background))
                     CalcInputView(
-                        swipeState= swipeState
+                        swipeState = swipeState
                     )
                 }
             }
 
-           AnimatedVisibility (swipeState.currentValue != 2){ if (isLandscape) {
-                Column(modifier = Modifier
-                    .fillMaxSize()
-                    .onSizeChanged {
-                        Log.i("TAG", "height: " + it.height)
-                        btnFontSize = (it.height / 30)
-                    }
-                    .padding(16.dp, 8.dp, 16.dp, 16.dp)) {
-                    landscapeList.forEach {
-                        Row(
-                            modifier = Modifier
-                                .weight(1f),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            it.forEach {
-                                CalcButton(
-                                    str = it,
-                                    isLandscape = isLandscape,
-                                    modifier = Modifier.weight(1f),
-                                    fontSize = btnFontSize
-                                )
+            AnimatedVisibility(swipeState.targetValue != 2,enter = slideInVertically{ height -> height * 2 }) {
+                if (isLandscape) {
+                    Column(modifier = Modifier
+                        .fillMaxSize()
+                        .onSizeChanged {
+                            Log.i("TAG", "height: " + it.height)
+                            btnFontSize = (it.height / 30)
+                        }
+                        .padding(16.dp, 8.dp, 16.dp, 16.dp)) {
+                        landscapeList.forEach {
+                            Row(
+                                modifier = Modifier
+                                    .weight(1f),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                it.forEach {
+                                    CalcButton(
+                                        str = it,
+                                        isLandscape = isLandscape,
+                                        modifier = Modifier.weight(1f),
+                                        fontSize = btnFontSize
+                                    )
+                                }
                             }
+                            Spacer(modifier = Modifier.height(4.dp))
                         }
-                        Spacer(modifier = Modifier.height(4.dp))
                     }
-                }
-            } else {
-                Column(
-                    Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                ) {
-                    Row(
+                } else {
+                    Column(
                         Modifier
+                            .padding(16.dp)
                             .fillMaxWidth()
-                            .wrapContentHeight()
+                            .fillMaxHeight()
                     ) {
-                        val isExpanded = remember {
-                            mutableStateOf(true)
-                        }
-                        Column(Modifier.weight(1f)) {
-                            portraitPlusList.forEachIndexed { index, list ->
-                                if (index == 0) {
-                                    Row {
-                                        list.forEach {
-                                            TextButton(
-                                                modifier = Modifier.weight(1f),
-                                                onClick = { }) {
-                                                Text(it, fontSize = 22.sp)
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    AnimatedVisibility(!isExpanded.value) {
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                        ) {
+                            val isExpanded = remember {
+                                mutableStateOf(true)
+                            }
+                            Column(Modifier.weight(1f)) {
+                                portraitPlusList.forEachIndexed { index, list ->
+                                    if (index == 0) {
                                         Row {
                                             list.forEach {
                                                 TextButton(
                                                     modifier = Modifier.weight(1f),
                                                     onClick = { }) {
-                                                    Text(it, fontSize = 22.sp)
+                                                    Text(it, fontSize = btnFontSize.sp)
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        AnimatedVisibility(!isExpanded.value) {
+                                            Row {
+                                                list.forEach {
+                                                    TextButton(
+                                                        modifier = Modifier.weight(1f),
+                                                        onClick = { }) {
+                                                        Text(it, fontSize = btnFontSize.sp)
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
                             }
-                        }
-                        IconButton(onClick = { isExpanded.value = !isExpanded.value }) {
-                            Icon(
-                                painterResource(id = if (isExpanded.value) R.drawable.ic_round_expand_more_24 else R.drawable.ic_round_expand_less_24),
-                                contentDescription = "expand"
-                            )
-                        }
-                    }
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .onSizeChanged {
-                                btnFontSize = it.height / 40
+                            IconButton(onClick = { isExpanded.value = !isExpanded.value }) {
+                                Icon(
+                                    painterResource(id = if (isExpanded.value) R.drawable.ic_round_expand_more_24 else R.drawable.ic_round_expand_less_24),
+                                    contentDescription = "expand"
+                                )
                             }
-                    ) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        portraitList.forEach {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                it.forEach {
-                                    val itemModifier = Modifier
-                                        .weight(1f)
-                                        .fillMaxHeight()
-                                    CalcButton(
-                                        str = it,
-                                        isLandscape = isLandscape,
-                                        modifier = itemModifier,
-                                        fontSize = btnFontSize
-                                    )
+                        }
+                        Column(
+                            Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight()
+                                .onSizeChanged {
+                                    btnFontSize = it.height / 40
                                 }
+                        ) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            portraitList.forEach {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .weight(1f),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    it.forEach {
+                                        val itemModifier = Modifier
+                                            .weight(1f)
+                                            .fillMaxHeight()
+                                        CalcButton(
+                                            str = it,
+                                            isLandscape = isLandscape,
+                                            modifier = itemModifier,
+                                            fontSize = btnFontSize
+                                        )
+                                    }
+                                }
+                                Spacer(modifier = Modifier.height(12.dp))
                             }
-                            Spacer(modifier = Modifier.height(12.dp))
                         }
                     }
                 }
             }
-        }
         }
 //        }
     }

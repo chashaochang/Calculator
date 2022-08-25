@@ -21,7 +21,7 @@ fun CalcButton(str: String, isLandscape: Boolean,modifier: Modifier,fontSize: In
                     fontSize = fontSize.sp,
                     onClick = {})
             }
-            "DEG", "√", "π", "INV", "^", "!", "sin", "cos", "tan", "e", "ln", "log" -> {
+            "RAD", "√", "π", "INV", "^", "!", "sin", "cos", "tan", "e", "ln", "log" -> {
                 WhiteBgButton(
                     modifier = modifier,
                     text = str,
