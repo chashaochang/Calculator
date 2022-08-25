@@ -31,7 +31,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cn.xiaobai.calculator.Calculator
 import cn.xiaobai.calculator.calcInputValue
 import cn.xiaobai.calculator.calcResultValue
 

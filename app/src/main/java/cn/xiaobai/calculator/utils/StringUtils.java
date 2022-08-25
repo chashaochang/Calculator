@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cn.xiaobai.calculator;
+package cn.xiaobai.calculator.utils;
 
 /**
  * Some helpful methods operating on strings.
