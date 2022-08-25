@@ -21,14 +21,9 @@
 * 历史记录展示（计划用datastore或者database）
 * 选择主题
 ## 演示
-基本计算功能
-![](./gifs/1.gif)
+🧬 效果图
+------------
 
-交互
-![](./gifs/2.gif)
-
-横竖屏切换
-![](./gifs/3.gif)
-
-暗色主题切换
-![](./gifs/4.gif)
+| 基本计算功能 | 交互 | 横竖屏切换 | 暗色主题切换 |
+| :----:| :----: | :----: | :----: |
+|  <img src="gifs/1.gif" width="200" alt="计算功能"> | <img src="gifs/2.gif" width="200" alt="交互"> | <img src="gifs/3.gif" width="200" alt="横竖屏切换"> | <img src="gifs/4.gif" width="200" alt="暗色主题切换"> |
