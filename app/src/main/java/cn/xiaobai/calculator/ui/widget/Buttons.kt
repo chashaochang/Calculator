@@ -145,6 +145,9 @@ fun BaseCalcButton(
                 "()" -> {
 
                 }
+                "+", "-", "×", "÷" -> {
+                    calcInputValue.value = calcInputValue.value +" "+ text + " "
+                }
                 else -> {
                     calcInputValue.value = calcInputValue.value + text
                 }

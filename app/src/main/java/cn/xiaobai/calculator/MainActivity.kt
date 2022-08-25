@@ -50,9 +50,12 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import cn.xiaobai.calculator.ui.theme.CalculatorTheme
 import cn.xiaobai.calculator.ui.widget.*
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -64,6 +67,15 @@ class MainActivity : ComponentActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
         setContent {
             CalculatorContent()
+        }
+        lifecycleScope.launch {
+            calcInputValue.collectLatest {
+                Log.i("TAG", "calcInputValue: " + it)
+                if(it.isBlank()) return@collectLatest
+                val result = StringUtils.calc(it)
+                Log.i("TAG", "result: " + result)
+                calcResultValue.value = result
+            }
         }
     }
 }

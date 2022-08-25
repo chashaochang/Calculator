@@ -23,41 +23,38 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cn.xiaobai.calculator.Calculator
 import cn.xiaobai.calculator.calcInputValue
 import cn.xiaobai.calculator.calcResultValue
 
 @Composable
 fun CalcInputView(swipeState: SwipeableState<Int>) {
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
-    val initTargetIndex = 0
+//    val initTargetIndex = 0
     val initValue = calcInputValue.collectAsState().value
-    val initSelectionIndex = initTargetIndex.takeIf { it <= initValue.length } ?: initValue.length
-    val textFieldValueState = remember {
-        mutableStateOf(
-            TextFieldValue(
-                text = initValue,
-                selection = TextRange(initSelectionIndex)
-            )
-        )
-    }
+//    val initSelectionIndex = initTargetIndex.takeIf { it <= initValue.length } ?: initValue.length
+//    val textFieldValueState = remember {
+//        mutableStateOf(
+//            TextFieldValue(
+//                text = initValue,
+//                selection = TextRange(initSelectionIndex)
+//            )
+//        )
+//    }
     val result = calcResultValue.collectAsState().value
     val height by remember {
         mutableStateOf(if(isLandscape) 150 else 234)
     }
     //一级锚点距离顶部 = 历史布局高度
     val historyHeight = with(LocalDensity.current) {
-        Log.i("CalcInputView", "historyHeight: " + 60.dp.toPx())
         if (isLandscape) 24.dp.toPx() else 60.dp.toPx()
     }
     val screenHeight =
@@ -128,9 +125,11 @@ fun CalcInputView(swipeState: SwipeableState<Int>) {
             }
         )
         BasicTextField(
-            value = textFieldValueState.value,
+            value = initValue,
             onValueChange = {
-                textFieldValueState.value = it
+//                Log.i("TAG", "onValueChange: " + it)
+//                calcInputValue.value = it
+//                calcResultValue.value = Calculator.cal(it)
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,

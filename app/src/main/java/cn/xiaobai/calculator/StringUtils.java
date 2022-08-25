@@ -65,7 +65,7 @@ public class StringUtils {
      * If so, return the remaining subsequence of whole. If not, return null.
      */
     public static CharSequence getExtensionIgnoring(CharSequence whole, CharSequence prefix,
-            char c) {
+                                                    char c) {
         int wIndex = 0;
         int pIndex = 0;
         final int wLen = whole.length();
@@ -80,7 +80,7 @@ public class StringUtils {
             if (pIndex == pLen) {
                 break;
             }
-            if (wIndex == wLen || whole.charAt(wIndex) != prefix.charAt(pIndex) ) {
+            if (wIndex == wLen || whole.charAt(wIndex) != prefix.charAt(pIndex)) {
                 return null;
             }
             ++pIndex;
@@ -90,5 +90,95 @@ public class StringUtils {
             ++wIndex;
         }
         return whole.subSequence(wIndex, wLen);
+    }
+
+    /**
+     * 网上随便找了个算法
+     * https://www.jb51.net/article/184613.htm
+     * */
+    public static String calc(String exp) {
+        String result = "";
+        if (exp == null || exp.equals("")) return result;
+        //因为没有运算符所以不用运算
+        if (!exp.contains(" ")) {
+            return result;
+        }
+        //截取运算符前面的字符串
+        String s1 = exp.substring(0, exp.indexOf(" "));
+        //截取的运算符
+        String op = exp.substring(exp.indexOf(" ") + 1, exp.indexOf(" ") + 2);
+        //截取运算符后面的字符串
+        String s2 = exp.substring(exp.indexOf(" ") + 3);
+        double cnt = 0;
+        if (!s1.equals("") && !s2.equals("")) {
+            double d1 = Double.parseDouble(s1);
+            double d2 = Double.parseDouble(s2);
+            if (op.equals("+")) {
+                cnt = d1 + d2;
+            }
+            if (op.equals("-")) {
+                cnt = d1 - d2;
+            }
+            if (op.equals("×")) {
+                cnt = d1 * d2;
+            }
+            if (op.equals("÷")) {
+                if (d2 == 0) cnt = 0;
+                else cnt = d1 / d2;
+            }
+            if (!s1.contains(".") && !s2.contains(".") && !op.equals("÷")) {
+                int res = (int) cnt;
+                result = res + "";
+            } else {
+                result = cnt + "";
+            }
+        }
+        //如果s1是空 s2不是空 就执行下一步
+        else if (!s1.equals("") && s2.equals("")) {
+            double d1 = Double.parseDouble(s1);
+            if (op.equals("+")) {
+                cnt = d1;
+            }
+            if (op.equals("-")) {
+                cnt = d1;
+            }
+            if (op.equals("×")) {
+                cnt = 0;
+            }
+            if (op.equals("÷")) {
+                cnt = 0;
+            }
+            if (!s1.contains(".")) {
+                int res = (int) cnt;
+                result = (res + "");
+            } else {
+                result = (cnt + "");
+            }
+        }
+        //如果s1是空 s2不是空 就执行下一步
+        else if (s1.equals("") && !s2.equals("")) {
+            double d2 = Double.parseDouble(s2);
+            if (op.equals("+")) {
+                cnt = d2;
+            }
+            if (op.equals("-")) {
+                cnt = 0 - d2;
+            }
+            if (op.equals("×")) {
+                cnt = 0;
+            }
+            if (op.equals("÷")) {
+                cnt = 0;
+            }
+            if (!s2.contains(".")) {
+                int res = (int) cnt;
+                result = (res + "");
+            } else {
+                result = (cnt + "");
+            }
+        } else {
+            result = ("");
+        }
+        return result;
     }
 }
