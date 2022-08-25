@@ -37,7 +37,6 @@ fun HistoryView(modifier: Modifier) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_round_history_24),
                     contentDescription = "history",
-                    tint = Color.DarkGray
                 )
                 Text("没有历史记录", fontSize = 20.sp, fontWeight = FontWeight.Normal)
             }

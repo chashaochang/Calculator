@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterialApi::class)
 
 package cn.xiaobai.calculator
 
@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -51,10 +52,12 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import cn.xiaobai.calculator.ui.theme.CalculatorTheme
 import cn.xiaobai.calculator.ui.widget.*
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -65,7 +68,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(showBackground = true)
+val calcInputValue : MutableStateFlow<String> = MutableStateFlow("")
+val calcResultValue : MutableStateFlow<String> = MutableStateFlow("")
+
 @Composable
 fun CalculatorContent() {
     //是否横屏
@@ -131,7 +136,9 @@ fun CalculatorContent() {
                 }
             }
 
-            AnimatedVisibility(swipeState.targetValue != 2,enter = slideInVertically{ height -> height * 2 }) {
+            AnimatedVisibility(
+                swipeState.targetValue != 2,
+                enter = slideInVertically { height -> height * 2 }) {
                 if (isLandscape) {
                     Column(modifier = Modifier
                         .fillMaxSize()
@@ -178,11 +185,11 @@ fun CalculatorContent() {
                                     if (index == 0) {
                                         Row {
                                             list.forEach {
-                                                TextButton(
+                                                WhiteBgButton(
                                                     modifier = Modifier.weight(1f),
-                                                    onClick = { }) {
-                                                    Text(it, fontSize = btnFontSize.sp)
-                                                }
+                                                    onClick = { },
+                                                    text = it, fontSize = btnFontSize.sp
+                                                )
                                             }
                                         }
                                     } else {
@@ -200,10 +207,11 @@ fun CalculatorContent() {
                                     }
                                 }
                             }
-                            IconButton(onClick = { isExpanded.value = !isExpanded.value }) {
+                            TextButton(onClick = { isExpanded.value = !isExpanded.value }, contentPadding = PaddingValues(0.dp)) {
                                 Icon(
                                     painterResource(id = if (isExpanded.value) R.drawable.ic_round_expand_more_24 else R.drawable.ic_round_expand_less_24),
-                                    contentDescription = "expand"
+                                    contentDescription = "expand",
+                                    modifier = Modifier.size(16.dp),
                                 )
                             }
                         }

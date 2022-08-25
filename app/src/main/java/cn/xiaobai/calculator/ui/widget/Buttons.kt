@@ -1,5 +1,6 @@
 package cn.xiaobai.calculator.ui.widget
 
+import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -9,17 +10,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cn.xiaobai.calculator.calcInputValue
+import cn.xiaobai.calculator.calcResultValue
 
 @Composable
-fun CalcButton(str: String, isLandscape: Boolean,modifier: Modifier,fontSize: Int) {
+fun CalcButton(str: String, isLandscape: Boolean, modifier: Modifier, fontSize: Int) {
     if (isLandscape) {
         when (str) {
             "AC" -> {
                 ACButton(
                     modifier = modifier,
                     text = str,
-                    fontSize = fontSize.sp,
-                    onClick = {})
+                    fontSize = fontSize.sp
+                )
             }
             "RAD", "√", "π", "INV", "^", "!", "sin", "cos", "tan", "e", "ln", "log" -> {
                 WhiteBgButton(
@@ -32,15 +35,15 @@ fun CalcButton(str: String, isLandscape: Boolean,modifier: Modifier,fontSize: In
                 TypeTwoButton(
                     modifier = modifier,
                     text = str,
-                    fontSize = fontSize.sp,
-                    onClick = {})
+                    fontSize = fontSize.sp
+                )
             }
             else -> {
                 TypeOneButton(
                     modifier = modifier,
                     text = str,
-                    fontSize = fontSize.sp,
-                    onClick = {})
+                    fontSize = fontSize.sp
+                )
             }
         }
     } else {
@@ -49,29 +52,29 @@ fun CalcButton(str: String, isLandscape: Boolean,modifier: Modifier,fontSize: In
                 ACButton(
                     modifier = modifier,
                     text = str,
-                    fontSize = fontSize.sp,
-                    onClick = {})
+                    fontSize = fontSize.sp
+                )
             }
             "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "." -> {
                 TypeOneButton(
                     modifier = modifier,
                     text = str,
-                    fontSize = fontSize.sp,
-                    onClick = {})
+                    fontSize = fontSize.sp
+                )
             }
             "()", "%", "÷", "×", "-", "+", "=" -> {
                 TypeTwoButton(
                     modifier = modifier,
                     text = str,
-                    fontSize = fontSize.sp,
-                    onClick = {})
+                    fontSize = fontSize.sp
+                )
             }
             else -> {
                 TypeOneButton(
                     modifier = modifier,
                     text = str,
-                    fontSize = fontSize.sp,
-                    onClick = {})
+                    fontSize = fontSize.sp
+                )
             }
         }
     }
@@ -81,12 +84,11 @@ fun CalcButton(str: String, isLandscape: Boolean,modifier: Modifier,fontSize: In
  * 数字键 . 退格
  */
 @Composable
-fun TypeOneButton(modifier: Modifier, text: String, fontSize: TextUnit, onClick: () -> Unit) {
+fun TypeOneButton(modifier: Modifier, text: String, fontSize: TextUnit) {
     BaseCalcButton(
         modifier = modifier,
         text = text,
         fontSize = fontSize,
-        onClick = onClick,
         colors = ButtonDefaults.filledTonalButtonColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
         )
@@ -97,19 +99,18 @@ fun TypeOneButton(modifier: Modifier, text: String, fontSize: TextUnit, onClick:
  * （）+ - * / % =
  */
 @Composable
-fun TypeTwoButton(modifier: Modifier, text: String, fontSize: TextUnit, onClick: () -> Unit) {
-    BaseCalcButton(modifier = modifier, text = text, onClick = onClick, fontSize = fontSize)
+fun TypeTwoButton(modifier: Modifier, text: String, fontSize: TextUnit) {
+    BaseCalcButton(modifier = modifier, text = text, fontSize = fontSize)
 }
 
 /**
  * AC
  */
 @Composable
-fun ACButton(modifier: Modifier, text: String, fontSize: TextUnit, onClick: () -> Unit) {
+fun ACButton(modifier: Modifier, text: String, fontSize: TextUnit) {
     BaseCalcButton(
         modifier = modifier,
         text = text,
-        onClick = onClick,
         colors = ButtonDefaults.filledTonalButtonColors(
             containerColor = MaterialTheme.colorScheme.errorContainer,
         ),
@@ -122,14 +123,33 @@ fun BaseCalcButton(
     modifier: Modifier,
     text: String,
     fontSize: TextUnit,
-    colors: ButtonColors = ButtonDefaults.filledTonalButtonColors(),
-    onClick: () -> Unit
+    colors: ButtonColors = ButtonDefaults.filledTonalButtonColors()
 ) {
     FilledTonalButton(
         modifier = modifier,
         contentPadding = PaddingValues(0.dp),
         colors = colors,
-        onClick = onClick
+        onClick = {
+            when (text) {
+                "backspace" -> {
+                    calcInputValue.value.dropLast(1)
+                }
+                "AC" -> {
+                    calcInputValue.value = ""
+                    calcResultValue.value = ""
+                }
+                "=" -> {
+                    calcInputValue.value = calcResultValue.value
+                    calcResultValue.value = ""
+                }
+                "()" -> {
+
+                }
+                else -> {
+                    calcInputValue.value = calcInputValue.value + text
+                }
+            }
+        }
     ) {
         if (text == "backspace") {
             Icon(
@@ -148,6 +168,6 @@ fun BaseCalcButton(
 @Composable
 fun WhiteBgButton(modifier: Modifier, text: String, fontSize: TextUnit, onClick: () -> Unit) {
     TextButton(modifier = modifier, contentPadding = PaddingValues(0.dp), onClick = onClick) {
-        Text(text = text, fontSize = fontSize, color = Color.Black)
+        Text(text = text, fontSize = fontSize)
     }
 }

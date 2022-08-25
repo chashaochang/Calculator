@@ -34,12 +34,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cn.xiaobai.calculator.calcInputValue
+import cn.xiaobai.calculator.calcResultValue
 
 @Composable
 fun CalcInputView(swipeState: SwipeableState<Int>) {
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val initTargetIndex = 0
-    val initValue = "5+5"
+    val initValue = calcInputValue.collectAsState().value
     val initSelectionIndex = initTargetIndex.takeIf { it <= initValue.length } ?: initValue.length
     val textFieldValueState = remember {
         mutableStateOf(
@@ -49,9 +51,7 @@ fun CalcInputView(swipeState: SwipeableState<Int>) {
             )
         )
     }
-    val result = remember {
-        mutableStateOf("10")
-    }
+    val result = calcResultValue.collectAsState().value
     val height by remember {
         mutableStateOf(if(isLandscape) 150 else 234)
     }
@@ -138,7 +138,7 @@ fun CalcInputView(swipeState: SwipeableState<Int>) {
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(if(isLandscape) 60.dp else 100.dp)
+                .height(if (isLandscape) 60.dp else 100.dp)
                 .background(Color.Transparent)
                 .padding(20.dp, 0.dp)
                 .align(Alignment.End),
@@ -152,7 +152,7 @@ fun CalcInputView(swipeState: SwipeableState<Int>) {
         //横屏隐藏计算结果
         if (!isLandscape) {
             Text(
-                text = result.value,
+                text = result,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
